@@ -26,7 +26,8 @@ function saveAndRender() {
   localStorage.setItem("pennypal-transactions", JSON.stringify(transactions));
   renderTransactions();
   renderBalance();
-  renderChart();
+  renderPieChartCategoryWise();
+  renderPieChartAllExpenses();
   generateCSVLink();
 }
 
@@ -35,7 +36,7 @@ function renderTransactions() {
   transactions.forEach(tx => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${tx.type}</td>
+      <td style="color:${tx.type === "Income" ? "green" : "red"}">${tx.type}</td>
       <td>${tx.category}</td>
       <td>${tx.amount.toFixed(2)}</td>
       <td>
@@ -50,7 +51,7 @@ function renderBalance() {
   const total = transactions.reduce((acc, tx) => {
     return tx.type === "Expense" ? acc - tx.amount : acc + tx.amount;
   }, 0);
-  balanceEl.textContent = `$${total.toFixed(2)}`;
+  balanceEl.textContent = `${total.toFixed(2)}`;
 }
 
 function deleteTransaction(id) {
@@ -69,40 +70,74 @@ function editTransaction(id) {
   }
 }
 
-function renderChart() {
+// PIE CHART #1 – Category-wise Expense Summary
+function renderPieChartCategoryWise() {
   const ctx = document.getElementById("pieChart").getContext("2d");
-  const expenseData = transactions.filter(tx => tx.type === "Expense");
+  const expenses = transactions.filter(tx => tx.type === "Expense");
 
-  const categorySums = {};
-  expenseData.forEach(tx => {
-    categorySums[tx.category] = (categorySums[tx.category] || 0) + tx.amount;
+  const categoryTotals = {};
+  expenses.forEach(tx => {
+    categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + tx.amount;
   });
 
-  const labels = Object.keys(categorySums);
-  const values = Object.values(categorySums);
+  const labels = Object.keys(categoryTotals);
+  const values = Object.values(categoryTotals);
 
-  if (window.pieChart) window.pieChart.destroy();
+  if (window.pieChart1) window.pieChart1.destroy();
 
-  window.pieChart = new Chart(ctx, {
+  if (labels.length === 0) {
+    ctx.clearRect(0, 0, 300, 300);
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#999";
+    ctx.fillText("No expense data to display", 50, 150);
+    return;
+  }
+
+  window.pieChart1 = new Chart(ctx, {
     type: "pie",
     data: {
       labels,
       datasets: [{
         data: values,
-        backgroundColor: [
-          "#FFB6C1", "#87CEFA", "#FFD700", "#98FB98",
-          "#DDA0DD", "#FFA07A", "#AEEEEE", "#FFC0CB"
-        ]
+        backgroundColor: ["#FFA07A", "#87CEFA", "#FFB6C1", "#DA70D6", "#98FB98", "#FFD700"]
       }]
     },
     options: {
-      plugins: {
-        legend: {
-          position: "bottom"
-        }
-      }
+      plugins: { legend: { position: "bottom" } }
     }
   });
+}
+
+// PIE CHART #2 – Every Expense as Slice
+function renderPieChartAllExpenses() {
+  const ctx2 = document.getElementById("pieChart2").getContext("2d");
+  const expenses = transactions.filter(tx => tx.type === "Expense");
+
+  const labels = expenses.map((tx, i) => `${tx.category} ${i + 1}`);
+  const values = expenses.map(tx => tx.amount);
+  const colors = values.map(() => getRandomPastel());
+
+  if (window.pieChart2) window.pieChart2.destroy();
+
+  window.pieChart2 = new Chart(ctx2, {
+    type: "pie",
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors
+      }]
+    },
+    options: {
+      plugins: { legend: { position: "bottom" } }
+    }
+  });
+}
+
+// Pastel random color generator
+function getRandomPastel() {
+  const hue = Math.floor(Math.random() * 360);
+  return `hsl(${hue}, 70%, 85%)`;
 }
 
 function generateCSVLink() {
@@ -120,5 +155,3 @@ function generateCSVLink() {
 
 // Initial render
 saveAndRender();
-
-
