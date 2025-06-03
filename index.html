@@ -13,7 +13,6 @@
 
   <h2>💰 PennyPal – Personal Finance Tracker</h2>
 
-  <!-- 🔐 Auth Section -->
   <div id="auth">
     <input id="email" placeholder="📧 Email"><br>
     <input id="password" type="password" placeholder="🔒 Password"><br>
@@ -21,14 +20,12 @@
     <button onclick="signin()">Login</button>
   </div>
 
-  <!-- 💼 Tracker Section -->
   <div id="tracker" style="display:none;">
     <p>
       Welcome, <span id="userEmail"></span> |
       <button onclick="logout()">Logout</button>
     </p>
 
-    <!-- ➕ Add Transaction -->
     <select id="type">
       <option value="Income">Income</option>
       <option value="Expense">Expense</option>
@@ -37,10 +34,8 @@
     <input id="amount" type="number" placeholder="Amount"><br>
     <button onclick="addTransaction()">Add Transaction</button>
 
-    <!-- 💰 Balance -->
     <h3>Balance: <span id="balance">$0.00</span></h3>
 
-    <!-- 📋 Transactions Table -->
     <table border="1" id="transactions">
       <thead>
         <tr>
@@ -53,16 +48,14 @@
       <tbody></tbody>
     </table>
 
-    <!-- 🛠️ Filter & Export Controls -->
     <br>
     <button onclick="filterThisMonth()">📅 This Month Only</button>
     <a id="downloadCSV"><button>⬇️ Export to CSV</button></a>
 
-    <!-- 📊 Pie Chart -->
     <canvas id="pieChart" width="400" height="400"></canvas>
   </div>
 
-  <!-- 🔧 App Logic -->
   <script src="app.js"></script>
 </body>
 </html>
+
