@@ -1,15 +1,19 @@
+// Firebase configuration for PennyPalTracker
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyClGm83y88ZBvEvUzMydZe123wQRm0IZ9I",
+  authDomain: "pennypaltracker.firebaseapp.com",
+  projectId: "pennypaltracker",
+  storageBucket: "pennypaltracker.appspot.com",  // Fixed typo: should be .appspot.com
+  messagingSenderId: "443059272077",
+  appId: "1:443059272077:web:7ebaf98ce929da5ba5a5c4",
+  measurementId: "G-VSJS9KBD11"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 let userId = null;
+
 
 function signup() {
   const emailVal = email.value;
@@ -167,4 +171,7 @@ function editPrompt(id, type, category, amount) {
 function generateCSV(data) {
   const csvContent = data.map(e => e.join(",")).join("\n");
   const blob = new Blob([csvContent], { type: "text/csv" });
-  const url = URL.creat
+  const url = URL.createObjectURL(blob);
+  document.getElementById("downloadCSV").href = url;
+  document.getElementById("downloadCSV").download = "transactions.csv";
+}
