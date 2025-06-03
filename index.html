@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PennyPal – Personal Finance Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>PennyPal – Your Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>💸 PennyPal</h1>
-    <p class="subtitle">Your Cute & Simple Finance Tracker</p>
+    <h1>💰 PennyPal</h1>
+    <p class="subtitle">Track your income and expenses the cute way 💖</p>
 
     <div class="balance">
       <h2>Current Balance: <span id="balance">$0.00</span></h2>
@@ -21,32 +21,31 @@
         <option value="Income">Income</option>
         <option value="Expense">Expense</option>
       </select>
-      <input type="text" id="category" placeholder="Category (e.g., Food, Salary)" required />
-      <input type="number" id="amount" placeholder="Amount" required />
-      <button type="submit">Add</button>
+      <input type="text" id="category" placeholder="Category (e.g., Food, Rent)" required />
+      <input type="number" id="amount" placeholder="Amount" step="0.01" required />
+      <button type="submit">➕ Add</button>
     </form>
 
-    <h3>Transactions</h3>
     <table id="transactionTable">
       <thead>
         <tr>
           <th>Type</th>
           <th>Category</th>
-          <th>Amount</th>
+          <th>Amount ($)</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <h3>Spending Breakdown</h3>
-    <canvas id="pieChart" width="300" height="300"></canvas>
+    <canvas id="pieChart" width="400" height="400"></canvas>
 
-    <a id="downloadCSV" class="button" href="#">⬇️ Export to CSV</a>
+    <a id="downloadCSV" class="button">📥 Download CSV</a>
   </div>
 
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
