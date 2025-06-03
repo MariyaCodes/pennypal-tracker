@@ -1,4 +1,3 @@
-// ⬇️ Your Firebase config here:
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -8,49 +7,58 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID"
   };
   
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   let userId = null;
   
-  // 🔐 Sign-up
+  // Signup with verification
   function signup() {
     const emailVal = email.value;
     const passwordVal = password.value;
   
     firebase.auth().createUserWithEmailAndPassword(emailVal, passwordVal)
-      .then(() => alert("✅ Signup successful! Please log in."))
+      .then(userCredential => {
+        userCredential.user.sendEmailVerification()
+          .then(() => {
+            alert("✅ Verification email sent. Please verify and then log in.");
+          });
+      })
       .catch(e => alert("❌ " + e.message));
   }
   
-  // 🔐 Login
+  // Login with redirect + verification check
   function signin() {
     const emailVal = email.value;
     const passwordVal = password.value;
   
     firebase.auth().signInWithEmailAndPassword(emailVal, passwordVal)
       .then(userCredential => {
-        userId = userCredential.user.uid;
-        userEmail.textContent = emailVal;
-        auth.style.display = 'none';
-        tracker.style.display = 'block';
-        loadTransactions();
+        if (userCredential.user.emailVerified) {
+          userId = userCredential.user.uid;
+          userEmail.textContent = emailVal;
+          auth.style.display = 'none';
+          tracker.style.display = 'block';
+          loadTransactions();
+  
+          // Redirect to Google Site
+          window.location.href = "https://sites.google.com/view/pennypal-financial-tracke/home";
+        } else {
+          alert("❗ Please verify your email address.");
+          firebase.auth().signOut();
+        }
       })
       .catch(e => alert("❌ " + e.message));
   }
   
-  // 🔐 Logout
   function logout() {
-    firebase.auth().signOut()
-      .then(() => {
-        auth.style.display = 'block';
-        tracker.style.display = 'none';
-        document.querySelector("#transactions tbody").innerHTML = "";
-        document.getElementById("balance").textContent = "$0.00";
-      });
+    firebase.auth().signOut().then(() => {
+      auth.style.display = 'block';
+      tracker.style.display = 'none';
+      document.querySelector("#transactions tbody").innerHTML = "";
+      document.getElementById("balance").textContent = "$0.00";
+    });
   }
   
-  // ➕ Add transaction
   function addTransaction() {
     const tType = type.value;
     const tCategory = category.value.trim();
@@ -76,8 +84,17 @@ const firebaseConfig = {
       });
   }
   
-  // 📥 Load and show transactions
-  function loadTransactions() {
+  function updateTransaction(id, updatedData) {
+    db.collection("users").doc(userId).collection("transactions").doc(id).update(updatedData)
+      .then(loadTransactions);
+  }
+  
+  function deleteTransaction(id) {
+    db.collection("users").doc(userId).collection("transactions").doc(id).delete()
+      .then(loadTransactions);
+  }
+  
+  function loadTransactions(monthFilter = null) {
     db.collection("users").doc(userId).collection("transactions")
       .orderBy("created")
       .get()
@@ -85,16 +102,31 @@ const firebaseConfig = {
         let balance = 0;
         const expenses = {};
         let tableRows = "";
+        const csvRows = [["Type", "Category", "Amount", "Date"]];
+        const now = new Date();
   
         snapshot.forEach(doc => {
           const t = doc.data();
+          const docId = doc.id;
+          const dateObj = t.created.toDate ? t.created.toDate() : new Date(t.created);
+  
+          // Monthly filter
+          if (monthFilter) {
+            if (dateObj.getMonth() !== monthFilter.getMonth() || dateObj.getFullYear() !== monthFilter.getFullYear()) return;
+          }
+  
           balance += t.amount;
+          csvRows.push([t.type, t.category, t.amount.toFixed(2), dateObj.toLocaleDateString()]);
   
           tableRows += `
             <tr>
               <td>${t.type}</td>
               <td>${t.category}</td>
               <td>${t.amount.toFixed(2)}</td>
+              <td>
+                <button onclick="editPrompt('${docId}', '${t.type}', '${t.category}', ${t.amount})">✏️</button>
+                <button onclick="deleteTransaction('${docId}')">🗑️</button>
+              </td>
             </tr>`;
   
           if (t.type === "Expense") {
@@ -105,26 +137,21 @@ const firebaseConfig = {
         document.querySelector("#transactions tbody").innerHTML = tableRows;
         document.getElementById("balance").textContent = `$${balance.toFixed(2)}`;
         renderPieChart(expenses);
+        generateCSV(csvRows);
       });
   }
   
-  // 📊 Pie chart for expenses
   let pieChart;
   function renderPieChart(data) {
     const ctx = document.getElementById("pieChart").getContext("2d");
-  
     if (pieChart) pieChart.destroy();
-  
     pieChart = new Chart(ctx, {
       type: "pie",
       data: {
         labels: Object.keys(data),
         datasets: [{
           data: Object.values(data),
-          backgroundColor: [
-            "#FFB6C1", "#87CEFA", "#FFD700", "#98FB98", "#DDA0DD", "#FFA07A",
-            "#AEEEEE", "#FFC0CB"
-          ]
+          backgroundColor: ["#FFB6C1", "#87CEFA", "#FFD700", "#98FB98", "#DDA0DD", "#FFA07A", "#AEEEEE", "#FFC0CB"]
         }]
       },
       options: {
@@ -136,4 +163,30 @@ const firebaseConfig = {
       }
     });
   }
+  
+  function editPrompt(id, type, category, amount) {
+    const newCategory = prompt("Edit category:", category);
+    const newAmount = parseFloat(prompt("Edit amount:", amount));
+    if (newCategory && !isNaN(newAmount)) {
+      updateTransaction(id, {
+        category: newCategory,
+        amount: type === "Expense" ? -Math.abs(newAmount) : Math.abs(newAmount)
+      });
+    }
+  }
+  
+  function generateCSV(data) {
+    const csvContent = data.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    document.getElementById("downloadCSV").href = url;
+    document.getElementById("downloadCSV").download = "transactions.csv";
+  }
+  
+  // 🎯 Filter by current month
+  function filterThisMonth() {
+    const now = new Date();
+    loadTransactions(now);
+  }
+  
   
