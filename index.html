@@ -13,7 +13,7 @@
     <p class="subtitle">Track your income and expenses the cute way 💖</p>
 
     <div class="balance">
-      <h2>Current Balance: <span id="balance">$0.00</span></h2>
+      <h2>Current Balance: <span id="balance">0.00</span></h2>
     </div>
 
     <form id="transactionForm">
@@ -26,19 +26,25 @@
       <button type="submit">➕ Add</button>
     </form>
 
-    <table id="transactionTable">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Category</th>
-          <th>Amount ($)</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="content">
+      <div class="table-section">
+        <table id="transactionTable">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <canvas id="pieChart" width="400" height="400"></canvas>
+      <div class="chart-section">
+        <canvas id="pieChart" width="300" height="300"></canvas>
+      </div>
+    </div>
 
     <a id="downloadCSV" class="button">📥 Download CSV</a>
   </div>
