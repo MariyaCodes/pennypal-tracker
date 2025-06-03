@@ -1,87 +1,108 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f7f3fa;
-    color: #333;
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-  }
-  
-  h2 {
-    color: #6b4992;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  input, select, button {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px;
-    margin: 5px auto;
-    display: block;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  
-  button {
-    background-color: #7d5ba6;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #5c3c87;
-  }
-  
-  #auth, #tracker {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-    margin-top: 30px;
-  }
-  
-  #tracker p {
-    font-size: 14px;
-    margin-top: -10px;
-  }
-  
-  #userEmail {
-    font-weight: bold;
-    color: #6b4992;
-  }
-  
-  h3 {
-    color: #5c3c87;
-    margin-top: 25px;
-  }
-  
-  table {
-    width: 100%;
-    margin-top: 10px;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  th {
-    background-color: #e0d0f7;
-    color: #4c2d72;
-  }
-  
-  canvas {
-    margin-top: 25px;
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
+  font-family: 'Segoe UI', sans-serif;
+  background: #fefefe;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fffafc;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #ff66b2;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.balance h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+form input, form select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 180px;
+}
+
+form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #ff66b2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #ff3385;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+table th, table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+table th {
+  background: #ffe0f0;
+}
+
+table button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto 30px;
+}
+
+.button {
+  display: block;
+  text-align: center;
+  background: #87ceeb;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.button:hover {
+  background: #00aaff;
+}
