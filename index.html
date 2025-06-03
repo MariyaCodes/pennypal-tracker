@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PennyPal – Finance Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  
+  <!-- Chart.js for visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h2>💰 PennyPal – Personal Finance Tracker</h2>
+
+  <!-- Login/Signup -->
+  <div id="auth">
+    <input id="email" placeholder="📧 Email"><br>
+    <input id="password" type="password" placeholder="🔒 Password"><br>
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="signin()">Login</button>
+  </div>
+
+  <!-- Tracker App (shown after login) -->
+  <div id="tracker" style="display:none;">
+    <p>
+      Welcome, <span id="userEmail"></span> |
+      <button onclick="logout()">Logout</button>
+    </p>
+
+    <!-- Transaction Entry -->
+    <select id="type">
+      <option value="Income">Income</option>
+      <option value="Expense">Expense</option>
+    </select><br>
+    <input id="category" placeholder="Category (e.g., Food, Salary)"><br>
+    <input id="amount" type="number" placeholder="Amount"><br>
+    <button onclick="addTransaction()">Add Transaction</button>
+
+    <!-- Balance Display -->
+    <h3>Balance: <span id="balance">$0.00</span></h3>
+
+    <!-- Transaction History Table -->
+    <table border="1" id="transactions">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Amount ($)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Pie Chart -->
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <!-- Your JS code -->
+  <script src="app.js"></script>
+</body>
+</html>
