@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PennyPal – Finance Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PennyPal – Personal Finance Tracker</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="container">
+    <h1>💸 PennyPal</h1>
+    <p class="subtitle">Your Cute & Simple Finance Tracker</p>
 
-  <h2>💰 PennyPal – Personal Finance Tracker</h2>
+    <div class="balance">
+      <h2>Current Balance: <span id="balance">$0.00</span></h2>
+    </div>
 
-  <div id="auth">
-    <input id="email" placeholder="📧 Email"><br>
-    <input id="password" type="password" placeholder="🔒 Password"><br>
-    <button onclick="signup()">Sign Up</button>
-    <button onclick="signin()">Login</button>
-  </div>
+    <form id="transactionForm">
+      <select id="type">
+        <option value="Income">Income</option>
+        <option value="Expense">Expense</option>
+      </select>
+      <input type="text" id="category" placeholder="Category (e.g., Food, Salary)" required />
+      <input type="number" id="amount" placeholder="Amount" required />
+      <button type="submit">Add</button>
+    </form>
 
-  <div id="tracker" style="display:none;">
-    <p>
-      Welcome, <span id="userEmail"></span> |
-      <button onclick="logout()">Logout</button>
-    </p>
-
-    <select id="type">
-      <option value="Income">Income</option>
-      <option value="Expense">Expense</option>
-    </select><br>
-    <input id="category" placeholder="Category (e.g., Food, Rent)"><br>
-    <input id="amount" type="number" placeholder="Amount"><br>
-    <button onclick="addTransaction()">Add Transaction</button>
-
-    <h3>Balance: <span id="balance">$0.00</span></h3>
-
-    <table border="1" id="transactions">
+    <h3>Transactions</h3>
+    <table id="transactionTable">
       <thead>
         <tr>
           <th>Type</th>
           <th>Category</th>
-          <th>Amount ($)</th>
+          <th>Amount</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
 
-    <br>
-    <button onclick="filterThisMonth()">📅 This Month Only</button>
-    <a id="downloadCSV"><button>⬇️ Export to CSV</button></a>
+    <h3>Spending Breakdown</h3>
+    <canvas id="pieChart" width="300" height="300"></canvas>
 
-    <canvas id="pieChart" width="400" height="400"></canvas>
+    <a id="downloadCSV" class="button" href="#">⬇️ Export to CSV</a>
   </div>
 
   <script src="app.js"></script>
 </body>
 </html>
+
 
